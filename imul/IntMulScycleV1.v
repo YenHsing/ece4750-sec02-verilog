@@ -1,3 +1,4 @@
+
 //========================================================================
 // Integer Multiplier Single Cycle Implementation
 //========================================================================
@@ -18,15 +19,56 @@ module imul_IntMulScycleV1
   output logic [31:0] out
 );
 
+  //flat implementation
+  /*
   //----------------------------------------------------------------------
   // Input Registers (sequential logic)
   //----------------------------------------------------------------------
-  // Implement the two input registers below.
+
+  logic [31:0] in0_reg;
+  logic [31:0] in1_reg;
+
+  always @( posedge clk ) begin
+    if ( reset ) begin
+      in0_reg <= 32'b0;
+      in1_reg <= 32'b0;
+    end
+    else begin
+      in0_reg <= in0;
+      in1_reg <= in1;
+    end
+  end
 
   //----------------------------------------------------------------------
   // Multiplication Logic (combinational logic)
   //----------------------------------------------------------------------
-  // Implement the multiplication logic below.
+
+  always @(*) begin
+    out = in0_reg * in1_reg;
+  end
+  */
+
+  //Structure imple.
+  //----------------------------------------------------------------------
+  // Input Registers (sequential logic)
+  //----------------------------------------------------------------------
+  logic[31:0] in0_reg;
+  vc_ResetReg#(32,0) in0_reg_
+  (
+    .clk(clk),
+    .reset(reset),
+    .d(in0),
+    .q(in0_reg)
+  );
+  logic[31:0] in1_reg;
+  vc_ResetReg#(32,0) in1_reg_
+  (
+    .clk(clk),
+    .reset(reset),
+    .d(in1),
+    .q(in1_reg)
+  );
+  assign out = in1_reg * in0_reg;
 
   //----------------------------------------------------------------------
   // Line Tracing
